@@ -1,0 +1,4 @@
+{
+    "mongoURI":"mongodb+srv://Robert:313131@ridesharing.fwizv.mongodb.net/ridesharing?retryWrites=true&w=majority",
+    "jwtSecret":"secret"
+}
