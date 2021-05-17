@@ -9,8 +9,8 @@ export default function Profile({ navigation }) {
   const userContext = useContext(UserContext);
   const postContext = useContext(PostContext);
   const { user, Logout } = userContext;
-  const { posts } = postContext;
-  const userPosts = posts.filter((post) => post?.user?._id == user?._id);
+  const { posts, deletePost } = postContext;
+  const userPosts = posts?.filter((post) => post?.user?._id == user?._id);
   return (
     <View style={styles.container}>
       {!user ? (
@@ -83,7 +83,10 @@ export default function Profile({ navigation }) {
                       />
                       <Text style={styles.text}>De la: {post.from}</Text>
                     </View>
-                    <Button color="#ff3200">
+                    <Button
+                      function={() => deletePost(post._id)}
+                      color="#ff3200"
+                    >
                       <MaterialCommunityIcons
                         name="trash-can-outline"
                         color="#000000"
@@ -115,7 +118,7 @@ export default function Profile({ navigation }) {
                       size={26}
                     />
                     <Text style={styles.text}>
-                      Locuri libere: {post.freeSeats}
+                      Locuri libere: {post?.freeSeats?(post.freeSeats):("Nu mai sunt locuri")}
                     </Text>
                   </View>
                   <View style={styles.icontext}>

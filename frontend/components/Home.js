@@ -18,10 +18,11 @@ export default function Home(props) {
   const userContext = useContext(UserContext);
   const postContext = useContext(PostContext);
   const { isAuthenticated, user } = userContext;
-  const { addPost, deletePost, posts, error } = postContext;
+  const { addPost, deletePost, updatePost, posts, error } = postContext;
   const [add, setAdd] = useState(true);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [seat, setSeat] = useState();
   const auxiliary = (bool) => {
     setAdd(bool);
   };
@@ -44,6 +45,7 @@ export default function Home(props) {
           <ScrollView>
             <Text style={styles.text}>De la</Text>
             <TextInput
+              style={styles.input}
               {...props}
               onChangeText={(text) => setFrom(text)}
               value={from}
@@ -53,6 +55,7 @@ export default function Home(props) {
 
             <Text style={styles.text}>Pana la</Text>
             <TextInput
+              style={styles.input}
               {...props}
               onChangeText={(text) => setTo(text)}
               value={to}
@@ -114,7 +117,8 @@ export default function Home(props) {
                       size={26}
                     />
                     <Text style={styles.text}>
-                      Locuri libere: {post.freeSeats}
+                      Locuri libere:{" "}
+                      {post?.freeSeats ? post.freeSeats : "Nu mai sunt locuri"}
                     </Text>
                   </View>
                   <View style={styles.icontext}>
@@ -133,6 +137,29 @@ export default function Home(props) {
                     />
                     <Text style={styles.text}>Contact: {post.user?.phone}</Text>
                   </View>
+                  {isAuthenticated && user?._id !== post.user._id ? (
+                    <View style={styles.icontext}>
+                      <Button
+                        function={async () => {
+                          let result = 0;
+                          parseInt(seat) > post.freeSeats
+                            ? (result = post.freeSeats)
+                            : (result = post.freeSeats - parseInt(seat));
+                          await updatePost(post._id, { seat: result });
+                        }}
+                        color="#ff3200"
+                      >
+                        <Text style={styles.text}>Rezerva</Text>
+                      </Button>
+                      <TextInput
+                        style={styles.input}
+                        {...props}
+                        onChangeText={(text) => setSeat(text)}
+                        editable
+                        maxLength={40}
+                      />
+                    </View>
+                  ) : null}
                 </Card>
               ))}
             </View>
@@ -242,5 +269,13 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     color: "#000000",
     fontSize: 17,
+  },
+  input: {
+    height: 30,
+    margin: 4,
+    padding: 4,
+    borderWidth: 1,
+    color: "#030303",
+    fontSize: 14,
   },
 });

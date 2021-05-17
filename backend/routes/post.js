@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 router.post("/", async (req, res) => {
-  const { from, to, date, freeSeats, user } = req.body;
+  let { from, to, date, freeSeats, user } = req.body;
+  freeSeats = parseInt(freeSeats);
   try {
     let post = new Post({ from, to, date, freeSeats, user });
     await post.save();
@@ -31,6 +32,19 @@ router.delete("/:id", async (req, res) => {
   try {
     await Post.findByIdAndRemove(id);
     res.status(204).end();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+router.put("/:id", async (req, res) => {
+  const { seat } = req.body;
+  try {
+    const post = await Post.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { freeSeats: seat } },
+      { new: true }
+    ).populate("user");
+    res.json(post);
   } catch (error) {
     res.status(500).send(error.message);
   }

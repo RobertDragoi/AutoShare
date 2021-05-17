@@ -16,4 +16,8 @@ const fetchPosts = async () => {
   const res = await axios.get(`${BASE_URL}/api/posts`);
   return res;
 };
-export default { addPost, fetchPosts,deletePost };
+const updatePost = async (id,formdata) => {
+  const res = await axios.put(`${BASE_URL}/api/posts/${id}`,formdata);
+  return res;
+};
+export default { addPost, fetchPosts, deletePost,updatePost };

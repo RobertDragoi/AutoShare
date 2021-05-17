@@ -3,7 +3,13 @@ import PostContext from "./postContext";
 import UserContext from "../UserState/userContext";
 import PostReducer from "./postReducer";
 import postServices from "../Services/postServices";
-import { ADD_POST, FETCH_POSTS, POST_ERROR, DELETE_POST } from "../types";
+import {
+  ADD_POST,
+  FETCH_POSTS,
+  POST_ERROR,
+  DELETE_POST,
+  UPDATE_POST,
+} from "../types";
 const PostState = (props) => {
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,6 +45,14 @@ const PostState = (props) => {
       dispatch({ type: POST_ERROR, payload: error.message });
     }
   };
+  const updatePost = async (id, formData) => {
+    try {
+      const res = await postServices.updatePost(id, formData);
+      dispatch({ type: UPDATE_POST, payload: res.data });
+    } catch (error) {
+      dispatch({ type: POST_ERROR, payload: error.message });
+    }
+  };
   return (
     <PostContext.Provider
       value={{
@@ -46,6 +60,7 @@ const PostState = (props) => {
         error: state.error,
         addPost,
         deletePost,
+        updatePost,
       }}
     >
       {props.children}
