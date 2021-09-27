@@ -192,7 +192,7 @@ export default function Home(props) {
                 },
               },
               to: {
-                label: "Pana la",
+                label: "Pan' la",
                 inputProps: {
                   keyboardType: "default",
                 },
